@@ -352,12 +352,6 @@ form {
     box-shadow   var(--transition-smooth);
 }
 
-#todoIbput::placeholder {
-  color: var(--color-text-muted);
-  font-style: italic;
-  font-weight: 300;
-}
-
 #todoIbput:hover {
   border-color: var(--color-border-hover);
   background: #1a1a1c;
@@ -369,6 +363,23 @@ form {
   box-shadow:
     0 0 0 3px rgba(201, 169, 110, 0.12),
     0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+#todoIbput::placeholder {
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  opacity: 0.75;
+  transition: color var(--transition-smooth),
+              opacity var(--transition-smooth);
+}
+
+#todoIbput:focus::placeholder {
+  color: var(--color-accent-light);
+  opacity: 0.55;
 }
 
 
