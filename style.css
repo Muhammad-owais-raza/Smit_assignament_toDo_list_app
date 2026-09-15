@@ -1,0 +1,817 @@
+/* ============================================================
+   LUXURY TODO APP — Premium UI/UX Stylesheet
+   ============================================================
+   Sections:
+   1. CSS Variables & Reset
+   2. Global & Body
+   3. Page Load Animation
+   4. Main App Container (body > layout)
+   5. Heading — H1
+   6. Form & Input
+   7. Add Task Button
+   8. Todo List — UL
+   9. Todo Item — LI
+   10. Edit & Delete Buttons
+   11. Hover / Focus / Active States
+   12. Micro-interactions & Animations
+   13. Responsive — Tablet (≤ 900px)
+   14. Responsive — Mobile (≤ 600px)
+   15. Responsive — Small Mobile (≤ 400px)
+   16. Reduced Motion Accessibility
+   ============================================================ */
+
+
+/* ============================================================
+   1. CSS VARIABLES & RESET
+   ============================================================ */
+
+:root {
+  /* Core palette */
+  --color-bg:           #0f0f0f;
+  --color-surface:      #161616;
+  --color-card:         #1c1c1e;
+  --color-border:       #2a2a2e;
+  --color-border-hover: #3a3a3f;
+
+  /* Text */
+  --color-text-primary:   #f0ede8;
+  --color-text-secondary: #9a9691;
+  --color-text-muted:     #5a5855;
+
+  /* Accent — champagne / warm gold */
+  --color-accent:         #c9a96e;
+  --color-accent-light:   #d4ba87;
+  --color-accent-dim:     #7a6440;
+  --color-accent-bg:      rgba(201, 169, 110, 0.08);
+
+  /* Danger */
+  --color-danger:         #c0504a;
+  --color-danger-hover:   #d9534f;
+  --color-danger-bg:      rgba(192, 80, 74, 0.1);
+
+  /* Shadows */
+  --shadow-sm:    0 1px 3px rgba(0, 0, 0, 0.35),
+                  0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md:    0 4px 12px rgba(0, 0, 0, 0.4),
+                  0 2px 6px  rgba(0, 0, 0, 0.3),
+                  0 0 0 1px  rgba(255, 255, 255, 0.03);
+  --shadow-lg:    0 12px 40px rgba(0, 0, 0, 0.55),
+                  0 4px  16px rgba(0, 0, 0, 0.35),
+                  0 0  0 1px  rgba(255, 255, 255, 0.04);
+  --shadow-accent:0 0 20px rgba(201, 169, 110, 0.12),
+                  0 4px 16px rgba(0, 0, 0, 0.4);
+
+  /* Spacing */
+  --space-xs:  6px;
+  --space-sm:  12px;
+  --space-md:  20px;
+  --space-lg:  32px;
+  --space-xl:  48px;
+
+  /* Radius */
+  --radius-sm:  8px;
+  --radius-md:  14px;
+  --radius-lg:  20px;
+  --radius-xl:  28px;
+
+  /* Typography */
+  --font-base: 'Inter', 'Manrope', 'Poppins', system-ui, -apple-system,
+               BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Transitions */
+  --transition-fast:   0.18s ease;
+  --transition-smooth: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* ============================================================
+   2. GLOBAL & BODY
+   ============================================================ */
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-base);
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: var(--space-xl) var(--space-md);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+
+  /* Ambient background texture */
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%,
+      rgba(201, 169, 110, 0.06) 0%,
+      transparent 70%),
+    radial-gradient(ellipse 60% 40% at 80% 100%,
+      rgba(201, 169, 110, 0.03) 0%,
+      transparent 60%);
+}
+
+/* Subtle animated ambient background pulse */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%,
+      rgba(201, 169, 110, 0.045) 0%,
+      transparent 65%);
+  animation: ambientPulse 8s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+/* All direct children of body sit above the pseudo-element */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ============================================================
+   3. PAGE LOAD ANIMATIONS — Keyframes
+   ============================================================ */
+
+@keyframes ambientPulse {
+  0%   { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 1;   transform: scale(1.04); }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes itemEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes accentLine {
+  from { width: 0; opacity: 0; }
+  to   { width: 56px; opacity: 1; }
+}
+
+
+/* ============================================================
+   4. APP WRAPPER — implicit body layout
+      (no wrapper div in HTML, so we style the card via form+ul)
+   ============================================================ */
+
+/* The entire "card" is composed of H1 + form + ul.
+   We create a visual card using a positioned wrapper via
+   body padding and a max-width on the relevant elements. */
+
+h1,
+form,
+#showList {
+  width: 100%;
+  max-width: 660px;
+}
+
+/* Invisible card backdrop spanning H1 through list */
+h1 {
+  /* Card starts visually at H1 */
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  padding: var(--space-xl) var(--space-lg) var(--space-md);
+  box-shadow: var(--shadow-lg);
+  animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+form {
+  background: var(--color-card);
+  border-left:  1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  padding: 0 var(--space-lg) var(--space-lg);
+  box-shadow:
+    -4px 0 0 -3px transparent,
+     4px 0 0 -3px transparent;
+  animation: fadeUp 0.6s 0.1s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+#showList {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-top: 1px solid rgba(201, 169, 110, 0.12);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  min-height: 24px;
+  box-shadow: var(--shadow-lg);
+  list-style: none;
+  animation: fadeUp 0.6s 0.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Empty list — no bottom padding bleed */
+#showList:empty {
+  padding: var(--space-sm) var(--space-lg);
+  min-height: 0;
+}
+
+
+/* ============================================================
+   5. HEADING — H1
+   ============================================================ */
+
+h1 {
+  font-size: clamp(1.45rem, 3.5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  text-align: left;
+  line-height: 1.2;
+
+  /* Subtle gold gradient on the text */
+  background-image: linear-gradient(
+    135deg,
+    #f0ede8 0%,
+    #d4ba87 50%,
+    #f0ede8 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation:
+    fadeUp  0.6s cubic-bezier(0.4, 0, 0.2, 1) both,
+    shimmer 5s   2s linear infinite;
+}
+
+/* Accent underline beneath the heading */
+h1::after {
+  content: '';
+  display: block;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent) 0%,
+    var(--color-accent-light) 50%,
+    transparent 100%
+  );
+  border-radius: 2px;
+  margin-top: var(--space-sm);
+  animation: accentLine 0.8s 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+
+/* ============================================================
+   6. FORM & INPUT
+   ============================================================ */
+
+form {
+  display: flex;
+  align-items: stretch;
+  gap: var(--space-sm);
+}
+
+#todoIbput {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  padding: 0 var(--space-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-base);
+  font-size: 0.95rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  caret-color: var(--color-accent);
+  transition:
+    border-color var(--transition-smooth),
+    background   var(--transition-smooth),
+    box-shadow   var(--transition-smooth);
+}
+
+#todoIbput::placeholder {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-weight: 300;
+}
+
+#todoIbput:hover {
+  border-color: var(--color-border-hover);
+  background: #1a1a1c;
+}
+
+#todoIbput:focus {
+  border-color: var(--color-accent-dim);
+  background: #1a1a1c;
+  box-shadow:
+    0 0 0 3px rgba(201, 169, 110, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+
+/* ============================================================
+   7. ADD TASK BUTTON — form > button
+   ============================================================ */
+
+form > button {
+  height: 52px;
+  padding: 0 var(--space-lg);
+  background: linear-gradient(
+    135deg,
+    var(--color-accent) 0%,
+    var(--color-accent-light) 100%
+  );
+  color: #0f0d09;
+  font-family: var(--font-base);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform    var(--transition-spring),
+    box-shadow   var(--transition-smooth),
+    filter       var(--transition-smooth);
+  box-shadow:
+    0 2px 8px  rgba(201, 169, 110, 0.25),
+    0 1px 3px  rgba(0, 0, 0, 0.4);
+}
+
+/* Shimmer sweep on button */
+form > button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.18) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.45s ease;
+}
+
+form > button:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 20px rgba(201, 169, 110, 0.35),
+    0 2px 8px  rgba(0, 0, 0, 0.45);
+  filter: brightness(1.06);
+}
+
+form > button:hover::before {
+  transform: translateX(100%);
+}
+
+form > button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow:
+    0 1px 6px  rgba(201, 169, 110, 0.2),
+    0 1px 3px  rgba(0, 0, 0, 0.4);
+  filter: brightness(0.97);
+}
+
+
+/* ============================================================
+   8. TODO LIST — UL#showList
+   ============================================================ */
+
+#showList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+
+/* ============================================================
+   9. TODO ITEM — LI
+   ============================================================ */
+
+#showList li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 14px var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  position: relative;
+
+  transition:
+    background   var(--transition-smooth),
+    border-color var(--transition-smooth),
+    box-shadow   var(--transition-smooth),
+    transform    var(--transition-smooth);
+
+  /* Entry animation */
+  animation: itemEnter 0.35s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Left accent bar on each item */
+#showList li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 2.5px;
+  background: linear-gradient(
+    180deg,
+    var(--color-accent) 0%,
+    var(--color-accent-dim) 100%
+  );
+  border-radius: 0 2px 2px 0;
+  opacity: 0.55;
+  transition: opacity var(--transition-smooth), height var(--transition-smooth);
+}
+
+/* Push action buttons to the right */
+#showList li > button {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Second button — no extra auto margin */
+#showList li > button + button {
+  margin-left: 0;
+}
+
+/* Staggered entrance delays for up to 12 items */
+#showList li:nth-child(1)  { animation-delay: 0.00s; }
+#showList li:nth-child(2)  { animation-delay: 0.05s; }
+#showList li:nth-child(3)  { animation-delay: 0.10s; }
+#showList li:nth-child(4)  { animation-delay: 0.14s; }
+#showList li:nth-child(5)  { animation-delay: 0.18s; }
+#showList li:nth-child(6)  { animation-delay: 0.21s; }
+#showList li:nth-child(7)  { animation-delay: 0.24s; }
+#showList li:nth-child(8)  { animation-delay: 0.27s; }
+#showList li:nth-child(9)  { animation-delay: 0.29s; }
+#showList li:nth-child(10) { animation-delay: 0.31s; }
+#showList li:nth-child(11) { animation-delay: 0.33s; }
+#showList li:nth-child(12) { animation-delay: 0.35s; }
+
+
+/* ============================================================
+   10. EDIT & DELETE BUTTONS — li > button
+   ============================================================ */
+
+#showList li > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  transition:
+    background    var(--transition-smooth),
+    border-color  var(--transition-smooth),
+    color         var(--transition-smooth),
+    transform     var(--transition-spring),
+    box-shadow    var(--transition-smooth);
+}
+
+/* Edit button — champagne accent */
+#showList li > button:first-of-type {
+  color: var(--color-accent-dim);
+}
+
+#showList li > button:first-of-type:hover {
+  color: var(--color-accent);
+  background: var(--color-accent-bg);
+  border-color: rgba(201, 169, 110, 0.25);
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 4px 12px rgba(201, 169, 110, 0.15);
+}
+
+#showList li > button:first-of-type:active {
+  transform: scale(0.94);
+  box-shadow: none;
+}
+
+/* Delete button — subtle red */
+#showList li > button:last-of-type {
+  color: #6b3f3c;
+}
+
+#showList li > button:last-of-type:hover {
+  color: var(--color-danger-hover);
+  background: var(--color-danger-bg);
+  border-color: rgba(192, 80, 74, 0.28);
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 4px 12px rgba(192, 80, 74, 0.18);
+}
+
+#showList li > button:last-of-type:active {
+  transform: scale(0.94);
+  box-shadow: none;
+}
+
+/* Icon sizing */
+#showList li > button i,
+#showList li > button svg {
+  font-size: 0.82rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   11. HOVER / FOCUS / ACTIVE STATES — Todo item
+   ============================================================ */
+
+#showList li:hover {
+  background: #1a1a1c;
+  border-color: var(--color-border-hover);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    0 1px 4px  rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+#showList li:hover::before {
+  opacity: 1;
+}
+
+
+/* ============================================================
+   12. DIVIDER between form and list — visual accent line
+   ============================================================ */
+
+#showList:not(:empty) {
+  border-top: 1px solid rgba(201, 169, 110, 0.14);
+}
+
+
+/* ============================================================
+   13. SCROLLBAR (webkit)
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-dim);
+}
+
+
+/* ============================================================
+   14. RESPONSIVE — TABLET  (≤ 900px)
+   ============================================================ */
+
+@media (max-width: 900px) {
+  :root {
+    --space-lg: 26px;
+    --space-xl: 36px;
+  }
+
+  body {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  h1,
+  form,
+  #showList {
+    max-width: 580px;
+  }
+}
+
+
+/* ============================================================
+   15. RESPONSIVE — MOBILE (≤ 600px)
+   ============================================================ */
+
+@media (max-width: 600px) {
+  :root {
+    --space-lg: 18px;
+    --space-xl: 28px;
+    --space-md: 16px;
+  }
+
+  body {
+    padding: var(--space-xl) var(--space-sm);
+    justify-content: flex-start;
+  }
+
+  h1,
+  form,
+  #showList {
+    max-width: 100%;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    padding: var(--space-lg) var(--space-md) var(--space-sm);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  form {
+    padding: 0 var(--space-md) var(--space-md);
+    gap: var(--space-xs);
+  }
+
+  #todoIbput {
+    height: 48px;
+    font-size: 0.9rem;
+    padding: 0 var(--space-sm);
+    border-radius: var(--radius-sm);
+  }
+
+  form > button {
+    height: 48px;
+    padding: 0 var(--space-md);
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    border-radius: var(--radius-sm);
+  }
+
+  #showList {
+    padding: var(--space-sm) var(--space-md) var(--space-md);
+    gap: var(--space-xs);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+
+  #showList li {
+    padding: 12px var(--space-sm);
+    font-size: 0.9rem;
+    border-radius: var(--radius-sm);
+  }
+
+  #showList li > button {
+    width: 32px;
+    height: 32px;
+  }
+
+  #showList li > button i {
+    font-size: 0.78rem;
+  }
+}
+
+
+/* ============================================================
+   16. RESPONSIVE — SMALL MOBILE (≤ 400px)
+   ============================================================ */
+
+@media (max-width: 400px) {
+  :root {
+    --space-md: 12px;
+    --space-sm: 10px;
+  }
+
+  body {
+    padding: 24px 10px;
+  }
+
+  h1 {
+    font-size: 1.25rem;
+    padding: var(--space-md) var(--space-sm) var(--space-xs);
+  }
+
+  form {
+    padding: 0 var(--space-sm) var(--space-sm);
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  /* On very small screens the button can go full width below input */
+  #todoIbput {
+    height: 44px;
+    min-width: 0;
+  }
+
+  form > button {
+    height: 42px;
+    font-size: 0.78rem;
+    padding: 0 var(--space-sm);
+  }
+
+  #showList {
+    padding: var(--space-xs) var(--space-sm) var(--space-sm);
+  }
+
+  #showList li {
+    padding: 10px var(--space-sm);
+    gap: var(--space-xs);
+  }
+
+  #showList li > button {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+
+/* ============================================================
+   17. REDUCED MOTION ACCESSIBILITY
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:   0.01ms !important;
+    animation-delay:      0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:  0.01ms !important;
+  }
+
+  body::before {
+    animation: none;
+  }
+
+  h1 {
+    animation: none;
+    background-image: none;
+    -webkit-text-fill-color: var(--color-text-primary);
+  }
+}
